@@ -10,7 +10,14 @@ export const register = async (req, res) => {
     const { fullName, phoneNumber, email, password, role } = req.body;
     try {
         // Check if user already exists
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ 
+          // $or: { 
+          //   email: email || null,
+          //   phoneNumber: phoneNumber || null
+          //  }
+          $or: [{ email: email || null}, { phoneNumber: phoneNumber || null}]
+         // Check if the email or phone number already exists
+         });
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         }
@@ -52,7 +59,7 @@ export const verifyEmail = async (req, res) => {
         });
 
         if (!user) {
-            return res.status(400).json({ message: "Invalid or expired token" });
+            return res.status(400).json({ message: "Invalid or expired token", email: user.email });
         }
 
         // Mark the user as verified
@@ -61,7 +68,7 @@ export const verifyEmail = async (req, res) => {
         user.isVerified = true; // Mark as verified
         await user.save();
 
-        return res.status(200).json({ message: "Email verified successfully" });
+        return res.status(200).json({ success: true, message: "Email verified successfully" });
     } catch (error) {
         console.error("Error verifying email:", error);
         return res.status(500).json({ message: "Server error" });

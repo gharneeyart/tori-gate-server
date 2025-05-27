@@ -33,7 +33,7 @@ const userSchema = new Schema(
     role: {
       type: String,
       enum: ["tenant", "landlord"],
-      default: "tenant",
+      default: "tenant"
     },
     lastLogin: {
       type: Date,
