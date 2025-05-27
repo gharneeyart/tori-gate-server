@@ -1,4 +1,4 @@
-const createWelcomeEmailTemplate = (fullName, clientUrl) => {
+export const createWelcomeEmailTemplate = (fullName, clientUrl) => {
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -80,7 +80,7 @@ const createWelcomeEmailTemplate = (fullName, clientUrl) => {
 `;
 };
 
-const createResetEmailTemplate = (fullName, resetUrl) => {
+export const createResetEmailTemplate = (fullName, resetUrl) => {
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -156,4 +156,3 @@ const createResetEmailTemplate = (fullName, resetUrl) => {
 </html>`;
 };
 
-module.exports = { createResetEmailTemplate, createWelcomeEmailTemplate };

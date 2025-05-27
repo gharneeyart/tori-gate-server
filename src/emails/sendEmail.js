@@ -1,8 +1,5 @@
-const nodemailer = require("nodemailer");
-const {
-  createResetEmailTemplate,
-  createWelcomeEmailTemplate,
-} = require("./emailTemplates");
+import nodemailer from "nodemailer";
+import { createResetEmailTemplate, createWelcomeEmailTemplate } from "./emailTemplates";
 
 const sendEmail = async ({ to, subject, html }) => {
   const transporter = nodemailer.createTransport({
@@ -27,17 +24,17 @@ const sendEmail = async ({ to, subject, html }) => {
   }
 };
 
-const sendWelcomeEmail = ({ fullName, clientUrl, email }) => {
+export const sendWelcomeEmail = ({ fullName, clientUrl, email }) => {
   const subject = "Welcome to Torii Gates";
   const html = createWelcomeEmailTemplate(fullName, clientUrl);
 
   sendEmail({ to: email, subject, html });
 };
 
-const sendResetPasswordEmail = ({ fullName, resetUrl, email }) => {
+export const sendResetPasswordEmail = ({ fullName, resetUrl, email }) => {
   const subject = "Reset Password";
   html = createResetEmailTemplate(fullName, resetUrl);
 
   sendEmail({ to: email, subject, html });
 };
-module.exports = { sendWelcomeEmail, sendResetPasswordEmail };
+
