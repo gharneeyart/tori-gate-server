@@ -15,7 +15,8 @@ const port = process.env.PORT
 
 app.get('/', (req, res) => {
     return res.send('Welcome to tori gate server');
-  });
+});
+
 app.use('/api/v1/auth', userRoutes);
 app.use('/api/v1/property', propertyRoutes);
   

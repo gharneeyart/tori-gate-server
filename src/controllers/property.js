@@ -1,8 +1,54 @@
 import Property from "../models/property.js";
-
+import { cloudinary }  from "../configs/cloudinary.config.js";
 export const createProperty = async (req, res) => {
-    res.send("Create Property Endpoint");
+    const { userId } = req.user; // Assuming userId is available in req.user
+    const { title, description, price, location, bedroom,livingRoom, paymentPeriod, kitchen, toilet  } = req.body; // Destructure the request body
+    if(!title || !description || !price || !location || !bedroom || !livingRoom || !paymentPeriod  || !kitchen || !toilet){ 
+        return res.status(400).json({ message: "All fields are required." });
+    }
+    try {
+        // Handle image uploads   
+        let uploadedImages = [];
+    if (req.files && req.files.length > 0) {
+        uploadedImages = await Promise.all(
+        req.files.map(async (file) => {
+          const result = await cloudinary.uploader.upload(file.path);
+          return result.secure_url;
+        })
+      );
+    }
+        const property = await Property.create({
+            title, 
+            description, 
+            price, 
+            location, 
+            bedroom,
+            livingRoom, 
+            paymentPeriod, 
+            kitchen, 
+            toilet, 
+            landlord: userId, 
+            images: uploadedImages
+        })
+        res.status(201).json({ success: true, message: "Property created successfully.", property });
+    } catch (error) {
+        console.error("Error creating property:", error);
+        res.status(500).json({ message: error.message });
+        
+    }
 };
+
+export const deleteProperty = async (req, res) => {
+    const { userId } = req.user; // Assuming userId is available in req.user
+    const {propertyId} = req.params;
+    try{
+        await Property.findOneAndDelete({landlord: userId, _id: propertyId});
+        res.status(200).json({ success: true, message: "Property deleted successfully." });
+    }catch{
+        console.error("Error deleting property:", error);
+        res.status(500).json({ message: error.message });
+    }
+}
 
 export const getLandlordProperties = async (req, res) => {
     const { userId } = req.user;
